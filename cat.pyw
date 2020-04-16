@@ -32,7 +32,7 @@ def load_images(path):
     return images
 
 
-images_cat = load_images('Image/Cat')
+# images_cat = load_images('Image/Cat')
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
 
