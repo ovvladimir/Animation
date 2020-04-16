@@ -35,12 +35,11 @@ def load_images(path):
 # images_cat = load_images('Image/Cat')
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
-
-sprite = pygame.image.load('Image/catR.png')
-R = [169, 165, 170, 173, 170, 168, 170, 174, 172, 159, 166, 168]
+imCat = load_images('Image/CatTexture')
+R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 166, 168]
 images_cat = []
-for i in range(len(R)):
-    images_cat.append(sprite.subsurface((sum(R[:i]), 0, R[i], 190)))
+for i, r in enumerate(R):
+    images_cat.append(imCat[0].subsurface((sum(R[:i]), 0, r, 190)))
 
 
 class BG(pygame.sprite.Sprite):
@@ -113,7 +112,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
     def gravitation(self):
         self.velocity.y += GRAVI
-        while pygame.sprite.spritecollideany(self, collidGroup, pygame.sprite.collide_rect_ratio(0.96)):
+        while pygame.sprite.spritecollideany(self, collidGroup, pygame.sprite.collide_rect_ratio(0.98)):
             self.position.y -= GRAVI
             self.velocity.y = 0
             self.rect.centery = int(self.position.y)
