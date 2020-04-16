@@ -35,8 +35,9 @@ def load_images(path):
 images_cat = load_images('Image/Cat')
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
-'''
+"""
 sprite = pygame.image.load('Image/cat_r.png')
+'''
 images_cat = [
     sprite.subsurface((0, 0, 172, 190)),
     sprite.subsurface((172, 0, 172, 190)),
@@ -47,6 +48,11 @@ images_cat = [
     sprite.subsurface((1031, 0, 172, 190)),
     sprite.subsurface((1203, 0, 172, 190))]
 '''
+images_cat = []
+w, h = 172, 190
+for i in range(8):
+    images_cat.append(sprite.subsurface((w * i, 0, w, h)))
+"""
 
 
 class BG(pygame.sprite.Sprite):
