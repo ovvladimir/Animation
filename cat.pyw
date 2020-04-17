@@ -95,8 +95,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             else:
                 self.rot = 0
                 rotate_jump[0] = False
-            images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
-            self.images = images
+            self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
         self.index += 0.1
         self.image = self.images[int(self.index % self.range)]
         if down[0]:
