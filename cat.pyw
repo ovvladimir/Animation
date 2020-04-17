@@ -20,6 +20,7 @@ FPS = 60
 clock = pygame.time.Clock()
 jump = [False]
 down = [False]
+rotate_jump = [False]
 SPEED = 0
 GRAVI = 1
 
@@ -36,7 +37,7 @@ def load_images(path) -> list:
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
 imCat = load_images('Image/CatTexture')
-R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 166, 168]
+R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
 images_cat = []
 h = imCat[0].get_height()
 for n, r in enumerate(R):
@@ -78,6 +79,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.range_jump_down = -3
         self.range_down = -2
         self.range_stop = -1
+        self.rot = 0
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
         self.position = pygame.math.Vector2(x, y)
@@ -86,9 +88,18 @@ class AnimatedSprite(pygame.sprite.Sprite):
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
     def update(self):
+        if rotate_jump[0]:
+            self.velocity.y = -5
+            if self.rot > -300:
+                self.rot -= 10
+            else:
+                self.rot = 0
+                rotate_jump[0] = False
+            images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
+            self.images = images
         self.index += 0.1
         self.image = self.images[int(self.index % self.range)]
-        if down[0] is True:
+        if down[0]:
             self.image = self.images[self.range_down]
         elif self.velocity.y < 0:
             self.image = self.images[self.range_jump_up]
@@ -118,7 +129,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.velocity.y = 0
             self.rect.centery = int(self.position.y)
 
-            if jump[0] is True:
+            if jump[0]:
                 self.velocity.y = -15
                 self.velocity.x = 3
             else:
@@ -157,8 +168,10 @@ while run:
         elif e.type == pygame.KEYDOWN:
             if e.key == pygame.K_ESCAPE:
                 run = False
-            elif e.key == pygame.K_SPACE or e.key == pygame.K_UP:
+            elif e.key == pygame.K_UP:
                 jump[0] = True
+            elif e.key == pygame.K_SPACE:
+                rotate_jump[0] = True
             elif e.key == pygame.K_DOWN:
                 down[0] = True
             elif e.key == pygame.K_RIGHT:
@@ -166,7 +179,7 @@ while run:
             elif e.key == pygame.K_LEFT:
                 SPEED = 0
         elif e.type == pygame.KEYUP:
-            if e.key == pygame.K_DOWN or e.key == pygame.K_SPACE or e.key == pygame.K_UP:
+            if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
                 jump[0] = False
 
