@@ -39,7 +39,7 @@ imCat = load_images('Image/CatTexture')
 R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 166, 168]
 images_cat = []
 for i, r in enumerate(R):
-    images_cat.append(imCat[0].subsurface((sum(R[:i]), 0, r, 190)))
+    images_cat.append(imCat[0].subsurface((sum(R[:i]), 0, r, imCat[0].get_height())))
 
 
 class BG(pygame.sprite.Sprite):
@@ -112,7 +112,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
     def gravitation(self):
         self.velocity.y += GRAVI
-        while pygame.sprite.spritecollideany(self, collidGroup, pygame.sprite.collide_rect_ratio(0.98)):
+        while pygame.sprite.spritecollideany(self, collidGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
             self.velocity.y = 0
             self.rect.centery = int(self.position.y)
@@ -162,12 +162,13 @@ while run:
                 down[0] = True
             elif e.key == pygame.K_RIGHT:
                 SPEED = 1
+            elif e.key == pygame.K_LEFT:
+                SPEED = 0
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_SPACE or e.key == pygame.K_UP:
                 down[0] = False
                 jump[0] = False
-            elif e.key == pygame.K_RIGHT:
-                SPEED = 1  # ###
+
     if obj_sprite.rect.right == 0:  # e.type == userevent:
         originalColor = obj_sprite.image.get_at((objW // 2, objH // 2))
         ar = pygame.PixelArray(obj_sprite.image)
