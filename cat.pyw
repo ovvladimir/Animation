@@ -38,8 +38,9 @@ images_bg = load_images('Image/BG')
 imCat = load_images('Image/CatTexture')
 R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 166, 168]
 images_cat = []
+h = imCat[0].get_height()
 for n, r in enumerate(R):
-    images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, imCat[0].get_height())))
+    images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, h)))
 
 
 class BG(pygame.sprite.Sprite):
