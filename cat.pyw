@@ -5,7 +5,7 @@ import random
 from colors import COLOR
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
-COLOR_CAT = ['red', 'green', 'blue', 'orange', 'yellow', 'olive drab', 'red4']
+COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 '''
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 3000)
