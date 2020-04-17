@@ -5,8 +5,8 @@ import random
 from colors import COLOR
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
+COLOR_CAT = ['red', 'green', 'blue', 'orange', 'yellow', 'olive drab', 'red4']
 '''
-COLOR = ['red', 'green', 'blue', 'orange', 'yellow', 'olive drab', 'red4']
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 3000)
 '''
@@ -178,16 +178,21 @@ while run:
                 SPEED = 1
             elif e.key == pygame.K_LEFT:
                 SPEED = 0
+            elif e.key == pygame.K_c and not rotate_jump[0]:  # e.type == userevent:
+                clr = random.choice(COLOR_CAT)
+                for c, cat_color in enumerate(cat.images):
+                    originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
+                    ar = pygame.PixelArray(cat_color)
+                    ar.replace(originalColor, pygame.Color(clr), 0.1)
+                    del ar
+                    images_cat = cat.images
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
                 jump[0] = False
 
-    if obj_sprite.rect.right == 0:  # e.type == userevent:
-        originalColor = obj_sprite.image.get_at((objW // 2, objH // 2))
-        ar = pygame.PixelArray(obj_sprite.image)
-        ar.replace(originalColor, pygame.Color(random.choice(COLOR)), 0.1)
-        del ar
+    if obj_sprite.rect.right == 0:
+        obj_sprite.image.fill(pygame.Color(random.choice(COLOR)))
 
     screen.fill(BACKGROUND_COLOR)
     sprites.update()
