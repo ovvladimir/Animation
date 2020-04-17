@@ -44,7 +44,7 @@ for n, r in enumerate(R):
     images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, h)))
 
 
-class BG(pygame.sprite.Sprite):
+class Background(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('Image/BG/bg.jpg')
@@ -136,7 +136,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 self.velocity.x = 0
 
 
-# bg1 = BG(0, 0)
+# bg1 = Background(0, 0)
 images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200))
 bg1 = Earth(0, 0, images_bg)
 bg2 = Earth(WIDTH_WIN, 0, images_bg)
