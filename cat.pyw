@@ -24,7 +24,7 @@ SPEED = 0
 GRAVI = 1
 
 
-def load_images(path):
+def load_images(path) -> list:
     images = []
     for file_name in os.listdir(path):
         image = pygame.image.load(path + os.sep + file_name)
