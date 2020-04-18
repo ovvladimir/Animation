@@ -23,6 +23,7 @@ jump = [False]
 down = [False]
 somersault = [False]
 menu_on_off = [True, False]
+day_night = [False, True]
 SPEED = 0
 GRAVI = 1
 
@@ -52,7 +53,7 @@ class Menu(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 22)
         self.text_list = [
-            'space - somersault', 'm   -   menu',
+            'space - somersault', 'm   -   menu', 'v    -   day / night',
             'z    -   -transparency', 'x    -   +transparency', 'c    -   color selection',
             '↓    -   to lie', '↑    -    jamp', '→  -   go', '←  -   stop']
         self.text_pos = [10, 0]
@@ -71,14 +72,6 @@ class Menu(pygame.sprite.Sprite):
             self.image.blit(self.text_render, self.text_pos)
             self.text_pos[1] += self.max_height_string
         self.rect = self.image.get_rect(topleft=(0, 0))
-
-
-class Background(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('Image/BG/bg.jpg')
-        self.image = pygame.transform.scale(self.image, SIZE_WINDOW)
-        self.rect = self.image.get_rect(topleft=(int(x), int(y)))
 
 
 class Earth(pygame.sprite.Sprite):
@@ -166,19 +159,19 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 self.velocity.x = 0
 
 
-# bg1 = Background(0, 0)
-images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200))
-bg1 = Earth(0, 0, images_bg)
-bg2 = Earth(WIDTH_WIN, 0, images_bg)
-
 menu = Menu()
-
 cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
+images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200))
+background1 = Earth(0, 0, images_bg)
+background2 = Earth(WIDTH_WIN, 0, images_bg)
 
-sprites = pygame.sprite.Group(bg1, bg2, earth1, earth2, menu)
+sprites = pygame.sprite.LayeredUpdates()
+sprites.add(earth1, earth2, layer=1)
+sprites.add(menu, layer=2)
+sprites.add(cat, layer=3)
 collidGroup = pygame.sprite.Group(earth1, earth2)
 
 obj = [pygame.Surface((200, 20), pygame.SRCALPHA)]
@@ -186,11 +179,8 @@ obj[0].fill((200, 200, 20, 255))
 objW, objH = obj[0].get_width(), obj[0].get_height()
 for i in range(3):
     obj_sprite = Earth(WIDTH_WIN + objW * i, HEIGHT_WIN / 2.2 - objH * i * 3, obj)
-    sprites.add(obj_sprite)
+    sprites.add(obj_sprite, layer=1)
     collidGroup.add(obj_sprite)
-
-sprites.add(cat)
-sprites.remove(bg1, bg2)
 
 run = True
 while run:
@@ -225,9 +215,15 @@ while run:
             elif e.key == pygame.K_m:
                 menu_on_off.reverse()
                 if menu_on_off[0]:
-                    sprites.add(menu)
+                    sprites.add(menu, layer=2)
                 elif not menu_on_off[0]:
                     sprites.remove(menu)
+            elif e.key == pygame.K_v:
+                day_night.reverse()
+                if day_night[0]:
+                    sprites.add(background1, background2, layer=0)
+                elif not day_night[0]:
+                    sprites.remove(background1, background2)
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
