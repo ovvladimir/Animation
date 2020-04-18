@@ -51,8 +51,9 @@ class TextMenu(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 21)
         self.text_list = [
-            'z - -transparency', 'x - +transparency', 'c - color selection',
-            'space - somersault', '↓ - to lie', '↑ - jamp', '→ - go', '← - stop']
+            'space - somersault',
+            'z    -   -transparency', 'x    -   +transparency', 'c    -   color selection',
+            '↓    -   to lie', '↑    -    jamp', '→  -   go', '←  -   stop']
         self.text_pos = [10, 0]
         self.width_string = []
         for string in self.text_list:
