@@ -6,10 +6,9 @@ from colors import COLOR
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
-'''
+
 userevent = pygame.USEREVENT
-pygame.time.set_timer(userevent, 3000)
-'''
+pygame.time.set_timer(userevent, 60000)
 
 pygame.init()
 SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
@@ -53,8 +52,8 @@ class Menu(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 22)
         self.text_list = [
-            'space - somersault', 'm   -   menu', 'v    -   day / night',
-            'z    -   -transparency', 'x    -   +transparency', 'c    -   color selection',
+            'space - somersault', 'm   -   menu', 'c    -   color selection',
+            'z    -   -transparency', 'x    -   +transparency',
             '↓    -   to lie', '↑    -    jamp', '→  -   go', '←  -   stop']
         self.text_pos = [10, 0]
         self.width_string = []
@@ -187,6 +186,12 @@ while run:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             run = False
+        elif e.type == userevent:
+            day_night.reverse()
+            if day_night[0]:
+                sprites.add(background1, background2, layer=0)
+            elif not day_night[0]:
+                sprites.remove(background1, background2)
         elif e.type == pygame.KEYDOWN:
             if e.key == pygame.K_ESCAPE:
                 run = False
@@ -200,7 +205,7 @@ while run:
                 SPEED = 1
             elif e.key == pygame.K_LEFT:
                 SPEED = 0
-            elif e.key == pygame.K_c and not somersault[0]:  # e.type == userevent:
+            elif e.key == pygame.K_c and not somersault[0]:
                 clr = random.choice(COLOR_CAT)  # цвет кота
                 for c, cat_color in enumerate(cat.images):
                     originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
