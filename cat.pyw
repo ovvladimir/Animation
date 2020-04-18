@@ -14,7 +14,7 @@ pygame.time.set_timer(userevent, 3000)
 pygame.init()
 SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
 BACKGROUND_COLOR = (100, 0, 255)
-screen = pygame.display.set_mode(SIZE_WINDOW)
+screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
 
 FPS = 60
 clock = pygame.time.Clock()
@@ -23,6 +23,7 @@ down = [False]
 rotate_jump = [False]
 SPEED = 0
 GRAVI = 1
+alpha = 255
 
 
 def load_images(path) -> list:
@@ -37,6 +38,7 @@ def load_images(path) -> list:
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
 imCat = load_images('Image/CatTexture')
+imCat[0] = imCat[0].convert()  # для установки прозрачности клавишами z и x
 R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
 images_cat = []
 h = imCat[0].get_height()
@@ -73,6 +75,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, x, y, img):
         pygame.sprite.Sprite.__init__(self)
         self.images = img
+        [self_image.set_colorkey((0, 0, 0)) for self_image in self.images]
         self.index = 0
         self.range = len(self.images[:-4])
         self.range_jump_up = -4
@@ -119,7 +122,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.rect.right = 0
         self.position.x = self.rect.centerx
         '''
-        self.gravitation()
+        self.image.set_alpha(alpha)  # прозрачность изображения
+        self.gravitation()  # гравитация
 
     def gravitation(self):
         self.velocity.y += GRAVI
@@ -178,13 +182,17 @@ while run:
             elif e.key == pygame.K_LEFT:
                 SPEED = 0
             elif e.key == pygame.K_c and not rotate_jump[0]:  # e.type == userevent:
-                clr = random.choice(COLOR_CAT)
+                clr = random.choice(COLOR_CAT)  # цвет кота
                 for c, cat_color in enumerate(cat.images):
                     originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
                     ar = pygame.PixelArray(cat_color)
                     ar.replace(originalColor, pygame.Color(clr), 0.1)
                     del ar
                     images_cat = cat.images
+            elif e.key == pygame.K_z:
+                alpha -= 25 if alpha > 5 else 5 if alpha > 0 else 0
+            elif e.key == pygame.K_x:
+                alpha += 25 if alpha < 250 else 5 if alpha < 255 else 0
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
