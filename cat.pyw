@@ -18,12 +18,12 @@ screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
 
 FPS = 60
 clock = pygame.time.Clock()
+alpha = 255
 jump = [False]
 down = [False]
 rotate_jump = [False]
 SPEED = 0
 GRAVI = 1
-alpha = 255
 
 
 def load_images(path) -> list:
