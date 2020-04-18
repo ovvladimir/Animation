@@ -46,7 +46,7 @@ for n, r in enumerate(R):
     images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, h)))
 
 
-class TextMenu(pygame.sprite.Sprite):
+class Menu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 22)
@@ -170,7 +170,7 @@ images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200
 bg1 = Earth(0, 0, images_bg)
 bg2 = Earth(WIDTH_WIN, 0, images_bg)
 
-menu = TextMenu()
+menu = Menu()
 
 cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 
