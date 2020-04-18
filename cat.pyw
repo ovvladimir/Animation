@@ -21,7 +21,7 @@ clock = pygame.time.Clock()
 alpha = 255
 jump = [False]
 down = [False]
-rotate_jump = [False]
+somersault = [False]
 SPEED = 0
 GRAVI = 1
 
@@ -44,6 +44,30 @@ images_cat = []
 h = imCat[0].get_height()
 for n, r in enumerate(R):
     images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, h)))
+
+
+class TextMenu(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.text = pygame.font.SysFont('Arial', 21)
+        self.text_pos = [10, 0]
+        self.h = 20
+        self.text_list = [
+            'z - -transparency', 'x - +transparency', 'c - color selection',
+            'space - somersault', '↓ - to lie', '↑ - jamp', '→ - go', '← - stop']
+        self.width_word = []
+        for word in self.text_list:
+            self.width_word.append(self.text.size(word)[0])
+        self.max_width_word = max(self.width_word)
+        self.image = pygame.Surface((
+            self.text_pos[0] + self.max_width_word,
+            self.text_pos[1] + len(self.text_list) * self.h - self.text.get_descent()),
+            flags=pygame.SRCALPHA)
+        for txt in self.text_list:
+            self.text_render = self.text.render(txt, True, (255, 255, 255), None)
+            self.image.blit(self.text_render, self.text_pos)
+            self.text_pos[1] += self.h
+        self.rect = self.image.get_rect(topleft=(0, 0))
 
 
 class Background(pygame.sprite.Sprite):
@@ -91,13 +115,13 @@ class AnimatedSprite(pygame.sprite.Sprite):
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
     def update(self):
-        if rotate_jump[0]:
+        if somersault[0]:
             self.velocity.y = -5
             if self.rot > -300:
                 self.rot -= 10
             else:
                 self.rot = 0
-                rotate_jump[0] = False
+                somersault[0] = False
             self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
         self.index += 0.1
         self.image = self.images[int(self.index % self.range)]
@@ -144,12 +168,14 @@ images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200
 bg1 = Earth(0, 0, images_bg)
 bg2 = Earth(WIDTH_WIN, 0, images_bg)
 
+menu = TextMenu()
+
 cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 
-sprites = pygame.sprite.Group(bg1, bg2, earth1, earth2)
+sprites = pygame.sprite.Group(bg1, bg2, earth1, earth2, menu)
 collidGroup = pygame.sprite.Group(earth1, earth2)
 
 obj = [pygame.Surface((200, 20), pygame.SRCALPHA)]
@@ -174,14 +200,14 @@ while run:
             elif e.key == pygame.K_UP:
                 jump[0] = True
             elif e.key == pygame.K_SPACE:
-                rotate_jump[0] = True
+                somersault[0] = True
             elif e.key == pygame.K_DOWN:
                 down[0] = True
             elif e.key == pygame.K_RIGHT:
                 SPEED = 1
             elif e.key == pygame.K_LEFT:
                 SPEED = 0
-            elif e.key == pygame.K_c and not rotate_jump[0]:  # e.type == userevent:
+            elif e.key == pygame.K_c and not somersault[0]:  # e.type == userevent:
                 clr = random.choice(COLOR_CAT)  # цвет кота
                 for c, cat_color in enumerate(cat.images):
                     originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
