@@ -50,23 +50,24 @@ class TextMenu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 21)
-        self.text_pos = [10, 0]
-        self.h = 20
         self.text_list = [
             'z - -transparency', 'x - +transparency', 'c - color selection',
             'space - somersault', '↓ - to lie', '↑ - jamp', '→ - go', '← - stop']
-        self.width_word = []
-        for word in self.text_list:
-            self.width_word.append(self.text.size(word)[0])
-        self.max_width_word = max(self.width_word)
+        self.text_pos = [10, 0]
+        self.width_string = []
+        for string in self.text_list:
+            self.width_string.append(self.text.size(string)[0])
+        self.max_width_string = max(self.width_string)
+        self.max_height_string = self.text.get_height() + self.text.get_descent()
+        self.top = self.text.get_height() - self.text.get_ascent()
         self.image = pygame.Surface((
-            self.text_pos[0] + self.max_width_word,
-            self.text_pos[1] + len(self.text_list) * self.h - self.text.get_descent()),
+            self.text_pos[0] + self.max_width_string,
+            self.text_pos[1] + self.top + len(self.text_list) * self.max_height_string),
             flags=pygame.SRCALPHA)
         for txt in self.text_list:
             self.text_render = self.text.render(txt, True, (255, 255, 255), None)
             self.image.blit(self.text_render, self.text_pos)
-            self.text_pos[1] += self.h
+            self.text_pos[1] += self.max_height_string
         self.rect = self.image.get_rect(topleft=(0, 0))
 
 
