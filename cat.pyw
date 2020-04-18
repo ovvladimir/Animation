@@ -49,7 +49,7 @@ for n, r in enumerate(R):
 class TextMenu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.text = pygame.font.SysFont('Arial', 21)
+        self.text = pygame.font.SysFont('Arial', 22)
         self.text_list = [
             'space - somersault',
             'z    -   -transparency', 'x    -   +transparency', 'c    -   color selection',
