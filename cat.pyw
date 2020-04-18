@@ -7,13 +7,13 @@ from colors import COLOR
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 
-userevent = pygame.USEREVENT
-pygame.time.set_timer(userevent, 60000)
-
 pygame.init()
 SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
 BACKGROUND_COLOR = (100, 0, 255)
 screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
+
+userevent = pygame.USEREVENT
+pygame.time.set_timer(userevent, 60000)
 
 FPS = 60
 clock = pygame.time.Clock()
@@ -223,12 +223,6 @@ while run:
                     sprites.add(menu, layer=2)
                 elif not menu_on_off[0]:
                     sprites.remove(menu)
-            elif e.key == pygame.K_v:
-                day_night.reverse()
-                if day_night[0]:
-                    sprites.add(background1, background2, layer=0)
-                elif not day_night[0]:
-                    sprites.remove(background1, background2)
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
