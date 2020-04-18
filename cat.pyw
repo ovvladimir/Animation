@@ -22,6 +22,7 @@ alpha = 255
 jump = [False]
 down = [False]
 somersault = [False]
+menu_on_off = [True, False]
 SPEED = 0
 GRAVI = 1
 
@@ -51,7 +52,7 @@ class Menu(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.text = pygame.font.SysFont('Arial', 22)
         self.text_list = [
-            'space - somersault',
+            'space - somersault', 'm   -   menu',
             'z    -   -transparency', 'x    -   +transparency', 'c    -   color selection',
             '↓    -   to lie', '↑    -    jamp', '→  -   go', '←  -   stop']
         self.text_pos = [10, 0]
@@ -221,6 +222,12 @@ while run:
                 alpha -= 25 if alpha > 5 else 5 if alpha > 0 else 0
             elif e.key == pygame.K_x:
                 alpha += 25 if alpha < 250 else 5 if alpha < 255 else 0
+            elif e.key == pygame.K_m:
+                menu_on_off.reverse()
+                if menu_on_off[0]:
+                    sprites.add(menu)
+                elif not menu_on_off[0]:
+                    sprites.remove(menu)
         elif e.type == pygame.KEYUP:
             if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
                 down[0] = False
