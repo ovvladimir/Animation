@@ -36,6 +36,7 @@ def load_images(path) -> list:
 
 
 # images_cat = load_images('Image/Cat')
+images_bat = load_images('Image/Bat')
 images_earth = load_images('Image/Earth')
 images_bg = load_images('Image/BG')
 imCat = load_images('Image/CatTexture')
@@ -91,6 +92,34 @@ class Earth(pygame.sprite.Sprite):
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
             self.image = self.images[self.index]
+
+
+class Bat(pygame.sprite.Sprite):
+    def __init__(self, x, y, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = img
+        self.index = 0
+        self.range = len(self.images)
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.bat_zoom = .4
+        self.zoom = 0
+
+    def update(self):
+        bat_angle = (cat.position - self.rect.center).as_polar()[1]
+        self.images = [pygame.transform.rotozoom(
+            image, 180 - bat_angle, self.bat_zoom) for image in images_bat]
+        self.index += 0.2
+        self.image = self.images[int(self.index % self.range)]
+        self.rect = self.image.get_rect(center=self.rect.center)
+        if self.zoom == 0:
+            self.bat_zoom += .001
+            if self.bat_zoom > .7:
+                self.zoom = 1
+        elif self.zoom == 1:
+            self.bat_zoom -= .001
+            if self.bat_zoom < .4:
+                self.zoom = 0
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
@@ -163,6 +192,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 menu = Menu()
 cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
+bat = Bat(WIDTH_WIN - images_bat[0].get_width(), 0, images_bat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
@@ -175,6 +205,7 @@ sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
 sprites.add(menu, layer=2)
 sprites.add(cat, layer=3)
+sprites.add(bat, layer=2)
 collideGroup = pygame.sprite.Group(earth1, earth2)
 
 obj = [pygame.Surface((200, 20), pygame.SRCALPHA)]
