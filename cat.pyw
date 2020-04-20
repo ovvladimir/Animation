@@ -200,7 +200,7 @@ class Cat(pygame.sprite.Sprite):
 
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
-bat = Bat(WIDTH_WIN - images_bat[0].get_width(), 0, images_bat)
+bat = Bat(WIDTH_WIN - imBat[0].get_width() // 2, 0, images_bat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
