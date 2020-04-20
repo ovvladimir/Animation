@@ -143,7 +143,7 @@ class Cat(pygame.sprite.Sprite):
         self.width = self.image.get_width() // 2
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
-    def update(self):
+    def flip(self):
         if somersault[0]:
             self.velocity.y = -5
             if self.rot > -300:
@@ -152,6 +152,8 @@ class Cat(pygame.sprite.Sprite):
                 self.rot = 0
                 somersault[0] = False
             self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
+
+    def animation(self):
         self.index += 0.1
         self.image = self.images[int(self.index % self.range)]
         if down[0]:
@@ -162,17 +164,12 @@ class Cat(pygame.sprite.Sprite):
             self.image = self.images[self.range_jump_down]
         elif SPEED == 0:
             self.image = self.images[self.range_stop]
-        self.image.set_alpha(alpha)  # прозрачность изображения
-
-        self.velocity.y += GRAVI
-        self.position += self.velocity
-        if self.position.x > WIDTH_WIN + self.width:
-            self.position.x = -self.width
-        self.rect = self.image.get_rect(center=list(map(int, self.position)))
-
-        self.gravitation()  # гравитация
 
     def gravitation(self):
+        self.velocity.y += GRAVI
+        self.position += self.velocity
+
+    def antigravity(self):
         while pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
             self.velocity.y = 0
@@ -183,6 +180,17 @@ class Cat(pygame.sprite.Sprite):
                 self.velocity.x = 3
             else:
                 self.velocity.x = SPEED
+
+    def update(self):
+        self.flip()
+        self.animation()
+        self.image.set_alpha(alpha)  # прозрачность изображения
+
+        self.gravitation()
+        if self.position.x > WIDTH_WIN + self.width:
+            self.position.x = -self.width
+        self.rect = self.image.get_rect(center=list(map(int, self.position)))
+        self.antigravity()
 
 
 menu = Menu()
