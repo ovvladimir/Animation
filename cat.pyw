@@ -139,6 +139,7 @@ class Cat(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
         self.position = pygame.math.Vector2(self.rect.center)
         self.velocity = pygame.math.Vector2()
+        self.velocity.x = SPEED
         self.width = self.image.get_width() // 2
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
@@ -161,24 +162,17 @@ class Cat(pygame.sprite.Sprite):
             self.image = self.images[self.range_jump_down]
         elif SPEED == 0:
             self.image = self.images[self.range_stop]
+        self.image.set_alpha(alpha)  # прозрачность изображения
 
-        self.position.x += SPEED
+        self.velocity.y += GRAVI
+        self.position += self.velocity
         if self.position.x > WIDTH_WIN + self.width:
             self.position.x = -self.width
-        '''
-        self.rect.centerx += SPEED
-        if self.rect.left > WIDTH_WIN:
-            self.rect.right = 0
-        self.position.x = self.rect.centerx
-        '''
-        self.position += self.velocity
         self.rect = self.image.get_rect(center=list(map(int, self.position)))
 
-        self.image.set_alpha(alpha)  # прозрачность изображения
         self.gravitation()  # гравитация
 
     def gravitation(self):
-        self.velocity.y += GRAVI
         while pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
             self.velocity.y = 0
@@ -188,7 +182,7 @@ class Cat(pygame.sprite.Sprite):
                 self.velocity.y = -15
                 self.velocity.x = 3
             else:
-                self.velocity.x = 0
+                self.velocity.x = SPEED
 
 
 menu = Menu()
