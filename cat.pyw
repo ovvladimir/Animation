@@ -102,11 +102,12 @@ class Bat(pygame.sprite.Sprite):
         self.range = len(self.images)
         self.image = self.images[self.index]
         self.rect = self.image.get_rect(topleft=(x, y))
+        self.position = pygame.math.Vector2(self.rect.center)
         self.bat_zoom = .4
         self.zoom = 0
 
     def update(self):
-        bat_angle = (cat.position - self.rect.center).as_polar()[1]
+        bat_angle = self.position.angle_to(cat.position - self.position)
         self.images = [pygame.transform.rotozoom(
             image, 180 - bat_angle, self.bat_zoom) for image in images_bat]
         self.index += 0.2
@@ -122,7 +123,7 @@ class Bat(pygame.sprite.Sprite):
                 self.zoom = 0
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class Cat(pygame.sprite.Sprite):
     def __init__(self, x, y, img):
         pygame.sprite.Sprite.__init__(self)
         self.images = img
@@ -135,8 +136,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.range_stop = -1
         self.rot = 0
         self.image = self.images[self.index]
-        self.rect = self.image.get_rect()
-        self.position = pygame.math.Vector2(x, y)
+        self.rect = self.image.get_rect(center=(x, y))
+        self.position = pygame.math.Vector2(self.rect.center)
         self.velocity = pygame.math.Vector2()
         self.width = self.image.get_width() // 2
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
@@ -161,9 +162,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
         elif SPEED == 0:
             self.image = self.images[self.range_stop]
 
-        self.position += self.velocity
-        self.rect = self.image.get_rect(center=(int(self.position.x), int(self.position.y)))
-
         self.position.x += SPEED
         if self.position.x > WIDTH_WIN + self.width:
             self.position.x = -self.width
@@ -173,6 +171,9 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.rect.right = 0
         self.position.x = self.rect.centerx
         '''
+        self.position += self.velocity
+        self.rect = self.image.get_rect(center=list(map(int, self.position)))
+
         self.image.set_alpha(alpha)  # прозрачность изображения
         self.gravitation()  # гравитация
 
@@ -191,7 +192,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 menu = Menu()
-cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
+cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 bat = Bat(WIDTH_WIN - images_bat[0].get_width(), 0, images_bat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
