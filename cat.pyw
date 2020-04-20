@@ -127,7 +127,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.image = self.images[self.range_down]
         elif self.velocity.y < 0:
             self.image = self.images[self.range_jump_up]
-        elif self.velocity.y > 3:
+        elif self.velocity.y > 4:
             self.image = self.images[self.range_jump_down]
         elif SPEED == 0:
             self.image = self.images[self.range_stop]
