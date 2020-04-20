@@ -83,7 +83,10 @@ class Earth(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(int(x), int(y)))
 
     def update(self):
-        self.rect.x -= SPEED
+        if self == background1 or self == background2:
+            self.rect.x -= SPEED * 2
+        else:
+            self.rect.x -= SPEED
         if self.rect.x <= -WIDTH_WIN:
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
@@ -146,7 +149,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
     def gravitation(self):
         self.velocity.y += GRAVI
-        while pygame.sprite.spritecollideany(self, collidGroup, pygame.sprite.collide_rect_ratio(0.97)):
+        while pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
             self.velocity.y = 0
             self.rect.centery = int(self.position.y)
@@ -163,6 +166,7 @@ cat = AnimatedSprite(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
+
 images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200))
 background1 = Earth(0, 0, images_bg)
 background2 = Earth(WIDTH_WIN, 0, images_bg)
@@ -171,7 +175,7 @@ sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
 sprites.add(menu, layer=2)
 sprites.add(cat, layer=3)
-collidGroup = pygame.sprite.Group(earth1, earth2)
+collideGroup = pygame.sprite.Group(earth1, earth2)
 
 obj = [pygame.Surface((200, 20), pygame.SRCALPHA)]
 obj[0].fill((200, 200, 20, 255))
@@ -179,7 +183,15 @@ objW, objH = obj[0].get_width(), obj[0].get_height()
 for i in range(3):
     obj_sprite = Earth(WIDTH_WIN + objW * i, HEIGHT_WIN / 2.2 - objH * i * 3, obj)
     sprites.add(obj_sprite, layer=1)
-    collidGroup.add(obj_sprite)
+    collideGroup.add(obj_sprite)
+'''
+collideColor = images_earth[0].get_at((30, 30))
+for sp in collideGroup:
+    # collideColor = sp.image.get_at((10, 10))
+    sp.mask = pygame.mask.from_threshold(sp.image, collideColor, (1, 1, 1, 255))
+# в def gravitation()
+# pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_mask)
+'''
 
 run = True
 while run:
