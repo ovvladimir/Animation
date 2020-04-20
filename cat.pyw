@@ -184,6 +184,7 @@ for i in range(3):
     obj_sprite = Earth(WIDTH_WIN + objW * i, HEIGHT_WIN / 2.2 - objH * i * 3, obj)
     sprites.add(obj_sprite, layer=1)
     collideGroup.add(obj_sprite)
+obj_sprite = sprites.get_sprites_from_layer(1)[-1]
 '''
 collideColor = images_earth[0].get_at((30, 30))
 for sp in collideGroup:
