@@ -42,11 +42,11 @@ images_bg = load_images('Image/BG')
 imCat = load_images('Image/Cat')
 
 imCat[0] = imCat[0].convert()  # для установки прозрачности клавишами z и x
-R = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
+W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
 images_cat = []
 h = imCat[0].get_height()
-for n, r in enumerate(R):
-    images_cat.append(imCat[0].subsurface((sum(R[:n]), 0, r, h)))
+for n, r in enumerate(W):
+    images_cat.append(imCat[0].subsurface((sum(W[:n]), 0, r, h)))
 
 images_bat = [
     imBat[0].subsurface((0, 0, 150, 150)),
