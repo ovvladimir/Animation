@@ -213,7 +213,7 @@ COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 images_list = []
 load_images('Images')
 
-images_list[1] = images_list[1].convert()  # для установки прозрачности клавишами z и x
+images_list[1] = images_list[1].convert()  # для установки прозрачности
 W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
 images_cat = []
 h = images_list[1].get_height()
