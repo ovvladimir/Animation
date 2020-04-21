@@ -244,8 +244,8 @@ earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - he, images_earth)
 sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
 sprites.add(menu, layer=2)
-sprites.add(cat, layer=3)
 sprites.add(bat, layer=2)
+sprites.add(cat, layer=3)
 collideGroup = pygame.sprite.Group(earth1, earth2)
 
 for _ in range(NUMBER_OF_STARS):
