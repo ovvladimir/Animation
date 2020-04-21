@@ -5,6 +5,11 @@ import random
 from colors import COLOR
 
 
+def load_images(path) -> list:
+    for file_name in os.listdir(path):
+        images_list.append(pygame.image.load(path + os.sep + file_name))
+
+
 class Menu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -166,19 +171,12 @@ class Cat(pygame.sprite.Sprite):
 
 '-----------------------------------------------------------------------------'
 
-
-def load_images(path) -> list:
-    for file_name in os.listdir(path):
-        images_list.append(pygame.image.load(path + os.sep + file_name))
-
-
 os.environ['SDL_VIDEO_CENTERED'] = '1'
-COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 
 pygame.init()
-SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
+WIDTH_WIN, HEIGHT_WIN = 960, 720
 DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
-screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
+screen = pygame.display.set_mode((WIDTH_WIN, HEIGHT_WIN))  # pygame.NOFRAME
 
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 60000)
@@ -210,6 +208,7 @@ day_night = [False, True]
 SPEED = 0
 GRAVI = 1
 NUMBER_OF_STARS = 150
+COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 
 images_list = []
 load_images('Images')
