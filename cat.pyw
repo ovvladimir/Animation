@@ -45,28 +45,33 @@ NUMBER_OF_STARS = 150
 
 
 def load_images(path) -> list:
-    images = []
     for file_name in os.listdir(path):
-        image = pygame.image.load(path + os.sep + file_name)
-        images.append(image)
-    return images
+        images_list.append(pygame.image.load(path + os.sep + file_name))
 
 
-# images_cat = load_images('Image/Cat2')
-imBat = load_images('Image/Bat')
-images_earth = load_images('Image/Earth')
-imCat = load_images('Image/Cat')
+images_list = []
+load_images('Image')
 
-imCat[0] = imCat[0].convert()  # для установки прозрачности клавишами z и x
+images_list[1] = images_list[1].convert()  # для установки прозрачности клавишами z и x
 W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
 images_cat = []
-h = imCat[0].get_height()
+h = images_list[1].get_height()
 for n, w in enumerate(W):
-    images_cat.append(imCat[0].subsurface((sum(W[:n]), 0, w, h)))
+    images_cat.append(images_list[1].subsurface((sum(W[:n]), 0, w, h)))
 
+size_bat = images_list[0].get_width() // 2
 images_bat = [
-    imBat[0].subsurface((0, 0, 150, 150)),
-    imBat[0].subsurface((150, 0, 150, 150))]
+    images_list[0].subsurface((0, 0, size_bat, size_bat)),
+    images_list[0].subsurface((size_bat, 0, size_bat, size_bat))
+]
+
+we, he = images_list[2].get_width() // 2, images_list[2].get_height() // 2
+images_earth = [
+    images_list[2].subsurface((0, 0, we, he)),
+    images_list[2].subsurface((we, 0, we, he)),
+    images_list[2].subsurface((0, he, we, he)),
+    images_list[2].subsurface((we, he, we, he))
+]
 
 
 class Menu(pygame.sprite.Sprite):
@@ -230,10 +235,10 @@ class Stars(pygame.sprite.Sprite):
 
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
-bat = Bat(WIDTH_WIN - imBat[0].get_width() // 2, 0, images_bat)
+bat = Bat(WIDTH_WIN - size_bat, 0, images_bat)
 
-earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
-earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
+earth1 = Earth(0, HEIGHT_WIN - he, images_earth)
+earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - he, images_earth)
 
 sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
