@@ -50,7 +50,7 @@ def load_images(path) -> list:
 
 
 images_list = []
-load_images('Image')
+load_images('Images')
 
 images_list[1] = images_list[1].convert()  # для установки прозрачности клавишами z и x
 W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
@@ -59,7 +59,7 @@ h = images_list[1].get_height()
 for n, w in enumerate(W):
     images_cat.append(images_list[1].subsurface((sum(W[:n]), 0, w, h)))
 
-size_bat = images_list[0].get_width() // 2
+size_bat = images_list[0].get_height()
 images_bat = [
     images_list[0].subsurface((0, 0, size_bat, size_bat)),
     images_list[0].subsurface((size_bat, 0, size_bat, size_bat))
