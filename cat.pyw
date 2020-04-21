@@ -4,75 +4,6 @@ import sys
 import random
 from colors import COLOR
 
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
-
-pygame.init()
-SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
-DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
-screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
-
-userevent = pygame.USEREVENT
-pygame.time.set_timer(userevent, 60000)
-
-key = {
-    'type_quit': pygame.QUIT,
-    'type_down': pygame.KEYDOWN,
-    'type_up': pygame.KEYUP,
-    'escape': pygame.K_ESCAPE,
-    'up': pygame.K_UP,
-    'space': pygame.K_SPACE,
-    'down': pygame.K_DOWN,
-    'right': pygame.K_RIGHT,
-    'left': pygame.K_LEFT,
-    'c': pygame.K_c,
-    'z': pygame.K_z,
-    'x': pygame.K_x,
-    'm': pygame.K_m
-}
-
-FPS = 60
-clock = pygame.time.Clock()
-alpha = 255
-jump = [False]
-down = [False]
-somersault = [False]
-menu_on_off = [True, False]
-day_night = [False, True]
-SPEED = 0
-GRAVI = 1
-NUMBER_OF_STARS = 150
-
-
-def load_images(path) -> list:
-    for file_name in os.listdir(path):
-        images_list.append(pygame.image.load(path + os.sep + file_name))
-
-
-images_list = []
-load_images('Images')
-
-images_list[1] = images_list[1].convert()  # для установки прозрачности клавишами z и x
-W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
-images_cat = []
-h = images_list[1].get_height()
-for n, w in enumerate(W):
-    images_cat.append(images_list[1].subsurface((sum(W[:n]), 0, w, h)))
-
-size_bat = images_list[0].get_height()
-images_bat = [
-    images_list[0].subsurface((0, 0, size_bat, size_bat)),
-    images_list[0].subsurface((size_bat, 0, size_bat, size_bat))
-]
-
-we, he = images_list[2].get_width() // 2, images_list[2].get_height() // 2
-images_earth = [
-    images_list[2].subsurface((0, 0, we, he)),
-    images_list[2].subsurface((we, 0, we, he)),
-    images_list[2].subsurface((0, he, we, he)),
-    images_list[2].subsurface((we, he, we, he))
-]
-
 
 class Menu(pygame.sprite.Sprite):
     def __init__(self):
@@ -115,6 +46,23 @@ class Earth(pygame.sprite.Sprite):
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
             self.image = self.images[self.index]
+
+
+class Stars(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = random.randrange(1, 3)
+        self.size = random.randrange(1, 4)
+        self.pos = random.randrange(0, WIDTH_WIN), random.randrange(0, HEIGHT_WIN - 200)
+        self.image = pygame.Surface((self.size * 2, self.size * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, pygame.Color(
+            random.choice(COLOR[238:262])), [self.size, self.size], self.size)
+        self.rect = self.image.get_rect(center=self.pos)
+
+    def update(self):
+        self.rect.x -= self.speed
+        if self.rect.right < 0:
+            self.rect.left = WIDTH_WIN
 
 
 class Bat(pygame.sprite.Sprite):
@@ -216,22 +164,76 @@ class Cat(pygame.sprite.Sprite):
         self.antigravity()
 
 
-class Stars(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.speed = random.randrange(1, 3)
-        self.size = random.randrange(1, 4)
-        self.pos = random.randrange(0, WIDTH_WIN), random.randrange(0, HEIGHT_WIN - 200)
-        self.image = pygame.Surface((self.size * 2, self.size * 2), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, pygame.Color(
-            random.choice(COLOR[238:262])), [self.size, self.size], self.size)
-        self.rect = self.image.get_rect(center=self.pos)
+'-----------------------------------------------------------------------------'
 
-    def update(self):
-        self.rect.x -= self.speed
-        if self.rect.right < 0:
-            self.rect.left = WIDTH_WIN
 
+def load_images(path) -> list:
+    for file_name in os.listdir(path):
+        images_list.append(pygame.image.load(path + os.sep + file_name))
+
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
+
+pygame.init()
+SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
+DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
+screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
+
+userevent = pygame.USEREVENT
+pygame.time.set_timer(userevent, 60000)
+
+key = {
+    'type_quit': pygame.QUIT,
+    'type_down': pygame.KEYDOWN,
+    'type_up': pygame.KEYUP,
+    'escape': pygame.K_ESCAPE,
+    'up': pygame.K_UP,
+    'space': pygame.K_SPACE,
+    'down': pygame.K_DOWN,
+    'right': pygame.K_RIGHT,
+    'left': pygame.K_LEFT,
+    'c': pygame.K_c,
+    'z': pygame.K_z,
+    'x': pygame.K_x,
+    'm': pygame.K_m
+}
+
+FPS = 60
+clock = pygame.time.Clock()
+alpha = 255
+jump = [False]
+down = [False]
+somersault = [False]
+menu_on_off = [True, False]
+day_night = [False, True]
+SPEED = 0
+GRAVI = 1
+NUMBER_OF_STARS = 150
+
+images_list = []
+load_images('Images')
+
+images_list[1] = images_list[1].convert()  # для установки прозрачности клавишами z и x
+W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
+images_cat = []
+h = images_list[1].get_height()
+for n, w in enumerate(W):
+    images_cat.append(images_list[1].subsurface((sum(W[:n]), 0, w, h)))
+
+size_bat = images_list[0].get_height()
+images_bat = [
+    images_list[0].subsurface((0, 0, size_bat, size_bat)),
+    images_list[0].subsurface((size_bat, 0, size_bat, size_bat))
+]
+
+we, he = images_list[2].get_width() // 2, images_list[2].get_height() // 2
+images_earth = [
+    images_list[2].subsurface((0, 0, we, he)),
+    images_list[2].subsurface((we, 0, we, he)),
+    images_list[2].subsurface((0, he, we, he)),
+    images_list[2].subsurface((we, he, we, he))
+]
 
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
