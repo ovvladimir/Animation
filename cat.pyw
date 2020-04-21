@@ -15,6 +15,22 @@ screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 60000)
 
+key = {
+    'type_quit': pygame.QUIT,
+    'type_down': pygame.KEYDOWN,
+    'type_up': pygame.KEYUP,
+    'escape': pygame.K_ESCAPE,
+    'up': pygame.K_UP,
+    'space': pygame.K_SPACE,
+    'down': pygame.K_DOWN,
+    'right': pygame.K_RIGHT,
+    'left': pygame.K_LEFT,
+    'c': pygame.K_c,
+    'z': pygame.K_z,
+    'x': pygame.K_x,
+    'm': pygame.K_m
+}
+
 FPS = 60
 clock = pygame.time.Clock()
 alpha = 255
@@ -251,7 +267,7 @@ for sp in collideGroup:
 run = True
 while run:
     for e in pygame.event.get():
-        if e.type == pygame.QUIT:
+        if e.type == key['type_quit']:
             run = False
         elif e.type == userevent:
             day_night.reverse()
@@ -259,20 +275,20 @@ while run:
                 sprites.add(stars_list, layer=0)
             elif not day_night[0]:
                 sprites.remove_sprites_of_layer(0)
-        elif e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_ESCAPE:
+        elif e.type == key['type_down']:
+            if e.key == key['escape']:
                 run = False
-            elif e.key == pygame.K_UP:
+            elif e.key == key['up']:
                 jump[0] = True
-            elif e.key == pygame.K_SPACE:
+            elif e.key == key['space']:
                 somersault[0] = True
-            elif e.key == pygame.K_DOWN:
+            elif e.key == key['down']:
                 down[0] = True
-            elif e.key == pygame.K_RIGHT:
+            elif e.key == key['right']:
                 SPEED = 1
-            elif e.key == pygame.K_LEFT:
+            elif e.key == key['left']:
                 SPEED = 0
-            elif e.key == pygame.K_c and not somersault[0]:
+            elif e.key == key['c'] and not somersault[0]:
                 clr = random.choice(COLOR_CAT)  # цвет кота
                 for c, cat_color in enumerate(cat.images):
                     originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
@@ -280,18 +296,18 @@ while run:
                     ar.replace(originalColor, pygame.Color(clr), 0.1)
                     del ar
                     images_cat = cat.images
-            elif e.key == pygame.K_z:
+            elif e.key == key['z']:
                 alpha -= 25 if alpha > 5 else 5 if alpha > 0 else 0
-            elif e.key == pygame.K_x:
+            elif e.key == key['x']:
                 alpha += 25 if alpha < 250 else 5 if alpha < 255 else 0
-            elif e.key == pygame.K_m:
+            elif e.key == key['m']:
                 menu_on_off.reverse()
                 if menu_on_off[0]:
                     sprites.add(menu, layer=2)
                 elif not menu_on_off[0]:
                     sprites.remove(menu)
-        elif e.type == pygame.KEYUP:
-            if e.key == pygame.K_DOWN or e.key == pygame.K_UP:
+        elif e.type == key['type_up']:
+            if e.key == key['down'] or e.key == key['up']:
                 down[0] = False
                 jump[0] = False
 
