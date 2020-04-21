@@ -9,7 +9,7 @@ COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 
 pygame.init()
 SIZE_WINDOW = WIDTH_WIN, HEIGHT_WIN = 960, 720
-BACKGROUND_COLOR = (100, 0, 255)
+DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
 screen = pygame.display.set_mode(SIZE_WINDOW)  # pygame.NOFRAME
 
 userevent = pygame.USEREVENT
@@ -25,6 +25,7 @@ menu_on_off = [True, False]
 day_night = [False, True]
 SPEED = 0
 GRAVI = 1
+NUMBER_OF_STARS = 150
 
 
 def load_images(path) -> list:
@@ -38,7 +39,6 @@ def load_images(path) -> list:
 # images_cat = load_images('Image/Cat2')
 imBat = load_images('Image/Bat')
 images_earth = load_images('Image/Earth')
-images_bg = load_images('Image/BG')
 imCat = load_images('Image/Cat')
 
 imCat[0] = imCat[0].convert()  # для установки прозрачности клавишами z и x
@@ -89,10 +89,7 @@ class Earth(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(int(x), int(y)))
 
     def update(self):
-        if self == background1 or self == background2:
-            self.rect.x -= SPEED * 2
-        else:
-            self.rect.x -= SPEED
+        self.rect.x -= SPEED
         if self.rect.x <= -WIDTH_WIN:
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
@@ -198,6 +195,23 @@ class Cat(pygame.sprite.Sprite):
         self.antigravity()
 
 
+class Stars(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = random.randrange(1, 3)
+        self.size = random.randrange(1, 4)
+        self.pos = random.randrange(0, WIDTH_WIN), random.randrange(0, HEIGHT_WIN - 200)
+        self.image = pygame.Surface((self.size * 2, self.size * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, pygame.Color(
+            random.choice(COLOR[238:262])), [self.size, self.size], self.size)
+        self.rect = self.image.get_rect(center=self.pos)
+
+    def update(self):
+        self.rect.x -= self.speed
+        if self.rect.right < 0:
+            self.rect.left = WIDTH_WIN
+
+
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 bat = Bat(WIDTH_WIN - imBat[0].get_width() // 2, 0, images_bat)
@@ -205,16 +219,17 @@ bat = Bat(WIDTH_WIN - imBat[0].get_width() // 2, 0, images_bat)
 earth1 = Earth(0, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - images_earth[0].get_height(), images_earth)
 
-images_bg[0] = pygame.transform.scale(images_bg[0], (WIDTH_WIN, HEIGHT_WIN - 200))
-background1 = Earth(0, 0, images_bg)
-background2 = Earth(WIDTH_WIN, 0, images_bg)
-
 sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
 sprites.add(menu, layer=2)
 sprites.add(cat, layer=3)
 sprites.add(bat, layer=2)
 collideGroup = pygame.sprite.Group(earth1, earth2)
+
+for _ in range(NUMBER_OF_STARS):
+    stars = Stars()
+    sprites.add(stars, layer=0)
+stars_list = sprites.remove_sprites_of_layer(0)
 
 obj = [pygame.Surface((200, 20), pygame.SRCALPHA)]
 obj[0].fill((200, 200, 20, 255))
@@ -241,9 +256,9 @@ while run:
         elif e.type == userevent:
             day_night.reverse()
             if day_night[0]:
-                sprites.add(background1, background2, layer=0)
+                sprites.add(stars_list, layer=0)
             elif not day_night[0]:
-                sprites.remove(background1, background2)
+                sprites.remove_sprites_of_layer(0)
         elif e.type == pygame.KEYDOWN:
             if e.key == pygame.K_ESCAPE:
                 run = False
@@ -283,7 +298,7 @@ while run:
     if obj_sprite.rect.right == 0:
         obj_sprite.image.fill(pygame.Color(random.choice(COLOR)))
 
-    screen.fill(BACKGROUND_COLOR)
+    screen.fill(NIGHT_BG_COLOR if day_night[0] else DAY_BG_COLOR)
     sprites.update()
     sprites.draw(screen)
     pygame.display.update()
