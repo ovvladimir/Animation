@@ -146,14 +146,13 @@ class Cat(pygame.sprite.Sprite):
         # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
     def flip(self):
-        if somersault[0]:
-            self.velocity.y = -5
-            if self.rot > -300:
-                self.rot -= 10
-            else:
-                self.rot = 0
-                somersault[0] = False
-            self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
+        self.velocity.y = -5
+        if self.rot > -300:
+            self.rot -= 10
+        else:
+            self.rot = 0
+            somersault[0] = False
+        self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
 
     def animation(self):
         self.index += 0.1
@@ -184,7 +183,8 @@ class Cat(pygame.sprite.Sprite):
                 self.velocity.x = SPEED
 
     def update(self):
-        self.flip()
+        if somersault[0]:
+            self.flip()
         self.animation()
         self.image.set_alpha(alpha)  # прозрачность изображения
 
