@@ -327,5 +327,4 @@ while run:
     pygame.display.set_caption(f'CAT   FPS: {int(clock.get_fps())}')
     clock.tick(FPS)
 
-pygame.quit()
 sys.exit(0)
