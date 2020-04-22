@@ -178,6 +178,7 @@ pygame.init()
 WIDTH_WIN, HEIGHT_WIN = 960, 720
 DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
 screen = pygame.display.set_mode((WIDTH_WIN, HEIGHT_WIN))  # pygame.NOFRAME
+pygame.mouse.set_visible(False)
 
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 60000)
