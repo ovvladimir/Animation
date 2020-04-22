@@ -145,7 +145,8 @@ class Cat(pygame.sprite.Sprite):
         self.position += self.velocity
 
     def antigravity(self):
-        while pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
+        while pygame.sprite.spritecollideany(
+                self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
             self.velocity.y = 0
             self.rect.centery = int(self.position.y)
