@@ -214,7 +214,7 @@ images_list = []
 load_images('Images')
 
 images_list[1] = images_list[1].convert()  # для установки прозрачности
-W = [168, 165, 170, 173, 170, 168, 170, 174, 172, 159, 167, 168]
+W = [169, 165, 170, 173, 170, 168, 170, 174, 172, 159, 173, 168]
 images_cat = []
 h = images_list[1].get_height()
 for n, w in enumerate(W):
@@ -297,7 +297,7 @@ while run:
             elif e.key == key['c'] and not somersault[0]:
                 clr = random.choice(COLOR_CAT)  # цвет кота
                 for c, cat_color in enumerate(cat.images):
-                    originalColor = cat_color.get_at((90, 105 if c == 10 else 40))
+                    originalColor = cat_color.get_at((90, 108 if c == 10 else 40))
                     ar = pygame.PixelArray(cat_color)
                     ar.replace(originalColor, pygame.Color(clr), 0.1)
                     del ar
