@@ -264,7 +264,7 @@ for i in range(3):
     collideGroup.add(obj_sprite)
 obj_sprite = sprites.get_sprites_from_layer(1)[-1]
 '''
-collideColor = images_earth[0].get_at((30, 30))
+collideColor = images_list[2].get_at((30, 30))
 for sp in collideGroup:
     # collideColor = sp.image.get_at((10, 10))
     sp.mask = pygame.mask.from_threshold(sp.image, collideColor, (1, 1, 1, 255))
