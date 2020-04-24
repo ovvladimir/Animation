@@ -119,7 +119,7 @@ class Bat2(pygame.sprite.Sprite):
         self.rect.centerx -= SPEED * 2
         if self.rect.right < 0:
             self.rect.left = random.randint(WIDTH_WIN, WIDTH_WIN * 2)
-        self.vel += GRAVI if self.rect.centerx < WIDTH_WIN else 0
+        self.vel += GRAVI if self.rect.left < WIDTH_WIN else 0
         self.rect.centery += self.vel
         while pygame.sprite.spritecollideany(
                 self, collideGroup, pygame.sprite.collide_mask):
