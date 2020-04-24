@@ -176,6 +176,7 @@ class Cat(pygame.sprite.Sprite):
         self.position += self.velocity
 
     def antigravity(self):
+        # pygame.sprite.collide_mask
         while pygame.sprite.spritecollideany(
                 self, collideGroup, pygame.sprite.collide_rect_ratio(0.97)):
             self.position.y -= GRAVI
@@ -300,8 +301,6 @@ obj_sprite = sprites.get_sprites_from_layer(1)[-1]
 
 collideColor = images_list[2].get_at((30, 30))
 mask()
-# в def gravitation()
-# pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_mask)
 
 run = True
 while run:
