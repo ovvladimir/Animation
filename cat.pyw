@@ -10,6 +10,12 @@ def load_images(path) -> list:
         images_list.append(pygame.image.load(path + os.sep + file_name))
 
 
+def mask():
+    for sp in collideGroup:
+        # collideColor = sp.image.get_at((30, 15))
+        sp.mask = pygame.mask.from_threshold(sp.image, collideColor, (1, 1, 1, 255))
+
+
 class Menu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -51,6 +57,7 @@ class Earth(pygame.sprite.Sprite):
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
             self.image = self.images[self.index]
+            # mask()
 
 
 class Stars(pygame.sprite.Sprite):
@@ -262,14 +269,11 @@ for i in range(3):
     sprites.add(obj_sprite, layer=1)
     collideGroup.add(obj_sprite)
 obj_sprite = sprites.get_sprites_from_layer(1)[-1]
-'''
+
 collideColor = images_list[2].get_at((30, 30))
-for sp in collideGroup:
-    # collideColor = sp.image.get_at((10, 10))
-    sp.mask = pygame.mask.from_threshold(sp.image, collideColor, (1, 1, 1, 255))
+# mask()
 # в def gravitation()
 # pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_mask)
-'''
 
 run = True
 while run:
