@@ -19,7 +19,6 @@ def mask():
 class Menu(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.text = pygame.font.SysFont('Arial', 22)
         self.text_list = [
             'space - somersault', 'm   -   menu', 'c    -   color selection',
             'z    -   -transparency', 'x    -   +transparency',
@@ -27,16 +26,16 @@ class Menu(pygame.sprite.Sprite):
         self.text_pos = [10, 0]
         self.width_string = []
         for string in self.text_list:
-            self.width_string.append(self.text.size(string)[0])
+            self.width_string.append(text.size(string)[0])
         self.max_width_string = max(self.width_string)
-        self.max_height_string = self.text.get_height() + self.text.get_descent()
-        self.top = self.text.get_height() - self.text.get_ascent()
+        self.max_height_string = text.get_height() + text.get_descent()
+        self.top = text.get_height() - text.get_ascent()
         self.image = pygame.Surface((
             self.text_pos[0] + self.max_width_string,
             self.text_pos[1] + self.top + len(self.text_list) * self.max_height_string),
             flags=pygame.SRCALPHA)
         for txt in self.text_list:
-            self.text_render = self.text.render(txt, True, (255, 255, 255), None)
+            self.text_render = text.render(txt, True, (255, 255, 255), None)
             self.image.blit(self.text_render, self.text_pos)
             self.text_pos[1] += self.max_height_string
         self.rect = self.image.get_rect(topleft=(0, 0))
@@ -57,7 +56,7 @@ class Earth(pygame.sprite.Sprite):
             self.rect.x = WIDTH_WIN
             self.index = random.randrange(self.range)
             self.image = self.images[self.index]
-            # mask()
+            mask()
 
 
 class Stars(pygame.sprite.Sprite):
@@ -104,6 +103,32 @@ class Bat(pygame.sprite.Sprite):
             self.bat_zoom -= .001
             if self.bat_zoom < .4:
                 self.zoom = 0
+
+
+class Bat2(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = images_list[3]
+        self.rect = self.image.get_rect(
+            bottomleft=(random.randint(WIDTH_WIN, WIDTH_WIN * 2), HEIGHT_WIN - he))
+        self.group = pygame.sprite.GroupSingle(self)
+        self.vel = 0
+        self.score = 0
+
+    def update(self):
+        self.rect.centerx -= SPEED * 2
+        if self.rect.right < 0:
+            self.rect.left = random.randint(WIDTH_WIN, WIDTH_WIN * 2)
+        self.vel += GRAVI if self.rect.centerx < WIDTH_WIN else 0
+        self.rect.centery += self.vel
+        while pygame.sprite.spritecollideany(
+                self, collideGroup, pygame.sprite.collide_mask):
+            self.rect.centery -= GRAVI
+            self.vel = 0
+        if pygame.sprite.spritecollideany(
+                cat, self.group, pygame.sprite.collide_circle_ratio(0.7)):
+            self.rect.left = random.randint(WIDTH_WIN, WIDTH_WIN * 2)
+            self.score += 1
 
 
 class Cat(pygame.sprite.Sprite):
@@ -242,9 +267,12 @@ images_earth = [
     images_list[2].subsurface((we, he, we, he))
 ]
 
+text = pygame.font.SysFont('Arial', 22)
+
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
 bat = Bat(WIDTH_WIN - size_bat, 0, images_bat)
+bat2 = Bat2()
 
 earth1 = Earth(0, HEIGHT_WIN - he, images_earth)
 earth2 = Earth(WIDTH_WIN, HEIGHT_WIN - he, images_earth)
@@ -253,7 +281,7 @@ sprites = pygame.sprite.LayeredUpdates()
 sprites.add(earth1, earth2, layer=1)
 sprites.add(menu, layer=2)
 sprites.add(bat, layer=2)
-sprites.add(cat, layer=3)
+sprites.add(cat, bat2, layer=3)
 collideGroup = pygame.sprite.Group(earth1, earth2)
 
 for _ in range(NUMBER_OF_STARS):
@@ -271,7 +299,7 @@ for i in range(3):
 obj_sprite = sprites.get_sprites_from_layer(1)[-1]
 
 collideColor = images_list[2].get_at((30, 30))
-# mask()
+mask()
 # в def gravitation()
 # pygame.sprite.spritecollideany(self, collideGroup, pygame.sprite.collide_mask)
 
@@ -326,6 +354,8 @@ while run:
         obj_sprite.image.fill(pygame.Color(random.choice(COLOR)))
 
     screen.fill(NIGHT_BG_COLOR if day_night[0] else DAY_BG_COLOR)
+    screen.blit(
+        text.render(f'{bat2.score}', True, (255, 255, 255), None), (WIDTH_WIN // 2, 5))
     sprites.update()
     sprites.draw(screen)
     pygame.display.update()
