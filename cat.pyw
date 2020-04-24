@@ -211,6 +211,7 @@ WIDTH_WIN, HEIGHT_WIN = 960, 720
 DAY_BG_COLOR, NIGHT_BG_COLOR = (100, 0, 255), (5, 0, 50)
 screen = pygame.display.set_mode((WIDTH_WIN, HEIGHT_WIN))  # pygame.NOFRAME
 pygame.mouse.set_visible(False)
+text = pygame.font.SysFont('Arial', 22)
 
 userevent = pygame.USEREVENT
 pygame.time.set_timer(userevent, 60000)
@@ -267,8 +268,6 @@ images_earth = [
     images_list[2].subsurface((0, he, we, he)),
     images_list[2].subsurface((we, he, we, he))
 ]
-
-text = pygame.font.SysFont('Arial', 22)
 
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
