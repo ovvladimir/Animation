@@ -117,7 +117,6 @@ class Cat(pygame.sprite.Sprite):
         self.velocity = pygame.math.Vector2()
         self.velocity.x = SPEED
         self.width = self.image.get_width() // 2
-        # pygame.draw.ellipse(self.image.copy(), (0, 0, 0, 0), self.rect)
 
     def flip(self):
         self.velocity.y = -5
