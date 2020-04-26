@@ -35,7 +35,7 @@ class Menu(pygame.sprite.Sprite):
             self.text_pos[1] + self.top + len(self.text_list) * self.max_height_string),
             flags=pygame.SRCALPHA)
         for txt in self.text_list:
-            self.text_render = text.render(txt, True, (255, 255, 255), None)
+            self.text_render = text.render(txt, True, WHITE, None)
             self.image.blit(self.text_render, self.text_pos)
             self.text_pos[1] += self.max_height_string
         self.rect = self.image.get_rect(topleft=(0, 0))
@@ -243,6 +243,7 @@ down = [False]
 somersault = [False]
 menu_on_off = [True, False]
 day_night = [False, True]
+WHITE = (255, 255, 255)
 SPEED = 0
 GRAVI = 1
 NUMBER_OF_STARS = 150
@@ -354,13 +355,13 @@ while run:
     if obj_sprite.rect.right == 0:
         obj_sprite.image.fill(pygame.Color(random.choice(COLOR)))
 
+    sprites.update()
     screen.fill(NIGHT_BG_COLOR if day_night[0] else DAY_BG_COLOR)
     screen.blit(
-        text.render(f'{bat2.score}', True, (255, 255, 255), None), (WIDTH_WIN // 2, 5))
-    sprites.update()
+        text.render(f'{bat2.score}', True, WHITE, None), (WIDTH_WIN // 2, 5))
     sprites.draw(screen)
     pygame.display.update()
-    pygame.display.set_caption(f'CAT   FPS: {int(clock.get_fps())}')
     clock.tick(FPS)
+    pygame.display.set_caption(f'CAT   FPS: {int(clock.get_fps())}')
 
 sys.exit(0)
