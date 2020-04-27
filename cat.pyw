@@ -80,9 +80,9 @@ class Bat(pygame.sprite.Sprite):
     def __init__(self, x, y, img):
         pygame.sprite.Sprite.__init__(self)
         self.images = img
-        self.index = 0
+        self.time = 0
         self.range = len(self.images)
-        self.image = self.images[self.index]
+        self.image = self.images[self.time]
         self.rect = self.image.get_rect(topleft=(x, y))
         self.position = pygame.math.Vector2(self.rect.center)
         self.bat_zoom = .4
@@ -92,8 +92,8 @@ class Bat(pygame.sprite.Sprite):
         bat_angle = self.position.angle_to(cat.position - self.position)
         self.images = [pygame.transform.rotozoom(
             image, 180 - bat_angle, self.bat_zoom) for image in images_bat]
-        self.index += 0.2
-        self.image = self.images[int(self.index % self.range)]
+        self.time += 0.2
+        self.image = self.images[int(self.time % self.range)]
         self.rect = self.image.get_rect(center=self.rect.center)
         if self.zoom == 0:
             self.bat_zoom += .001
@@ -139,14 +139,14 @@ class Cat(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.images = img
         [self_image.set_colorkey((0, 0, 0)) for self_image in self.images]
-        self.index = 0
+        self.time = 0
         self.range = len(self.images[:-4])
         self.range_jump_up = -4
         self.range_jump_down = -3
         self.range_down = -2
         self.range_stop = -1
         self.rot = 0
-        self.image = self.images[self.index]
+        self.image = self.images[self.time]
         self.rect = self.image.get_rect(center=(x, y))
         self.position = pygame.math.Vector2(self.rect.center)
         self.velocity = pygame.math.Vector2()
@@ -163,8 +163,8 @@ class Cat(pygame.sprite.Sprite):
         self.images = [pygame.transform.rotate(image, self.rot) for image in images_cat]
 
     def animation(self):
-        self.index += 0.1
-        self.image = self.images[int(self.index % self.range)]
+        self.time += dt
+        self.image = self.images[int(self.time % self.range)]
         if down[0]:
             self.image = self.images[self.range_down]
         elif self.velocity.y < 0:
@@ -307,6 +307,7 @@ mask()
 
 run = True
 while run:
+    dt = clock.tick(FPS) / 150.
     for e in pygame.event.get():
         if e.type == key['type_quit']:
             run = False
@@ -361,7 +362,6 @@ while run:
         text.render(f'{bat2.score}', True, WHITE, None), (WIDTH_WIN // 2, 5))
     sprites.draw(screen)
     pygame.display.update()
-    clock.tick(FPS)
     pygame.display.set_caption(f'CAT   FPS: {int(clock.get_fps())}')
 
 sys.exit(0)
