@@ -85,12 +85,12 @@ class Bat(pygame.sprite.Sprite):
         self.range = len(self.images)
         self.image = self.images[self.time]
         self.rect = self.image.get_rect(topleft=(x, y))
-        self.position = pygame.math.Vector2(self.rect.center)
+        self.direction = pygame.math.Vector2(self.rect.center)
         self.bat_zoom = .4
         self.zoom = 0
 
     def update(self):
-        bat_angle = self.position.angle_to(cat.position - self.position)
+        bat_angle = self.direction.angle_to(cat.position - self.direction)
         self.images = [pygame.transform.rotozoom(
             image, 180 - bat_angle, self.bat_zoom) for image in images_bat]
         self.time += 0.2
@@ -260,11 +260,11 @@ with open('texture.txt') as f:
     for lines in f:
         line = ast.literal_eval(lines)
         if 'cat' in line.keys():
-            X, Y, W, h = [*line[str(*line.keys())].values()]
+            X, Y, W, h = line[str(*line.keys())].values()
             for n, w in enumerate(W):
                 images_cat.append(images_list[1].subsurface((X[n], Y[n], w, h)))
         elif 'bat' in line.keys():
-            X, Y, W, h = [*line[str(*line.keys())].values()]
+            X, Y, W, h = line[str(*line.keys())].values()
             for n, w in enumerate(W):
                 images_bat.append(images_list[0].subsurface((X[n], Y[n], w, h)))
             height_bat = h
