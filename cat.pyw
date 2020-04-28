@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import random
+import ast
 from colors import COLOR
 
 
@@ -252,18 +253,21 @@ COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 images_list = []
 load_images('Images')
 
-images_list[1] = images_list[1].convert()  # для установки прозрачности
-W = [169, 165, 170, 173, 170, 168, 170, 174, 172, 159, 173, 168]
+image_cat = images_list[1].convert()  # для установки прозрачности
 images_cat = []
-h = images_list[1].get_height()
-for n, w in enumerate(W):
-    images_cat.append(images_list[1].subsurface((sum(W[:n]), 0, w, h)))
-
-size_bat = images_list[0].get_height()
-images_bat = [
-    images_list[0].subsurface((0, 0, size_bat, size_bat)),
-    images_list[0].subsurface((size_bat, 0, size_bat, size_bat))
-]
+images_bat = []
+with open('texture.txt') as f:
+    for lines in f:
+        line = ast.literal_eval(lines)
+        if 'cat' in line.keys():
+            X, Y, W, h = [*line[str(*line.keys())].values()]
+            for n, w in enumerate(W):
+                images_cat.append(image_cat.subsurface((X[n], Y[n], w, h)))
+        elif 'bat' in line.keys():
+            X, Y, W, h = [*line[str(*line.keys())].values()]
+            for n, w in enumerate(W):
+                images_bat.append(images_list[0].subsurface((X[n], Y[n], w, h)))
+            height_bat = h
 
 we, he = images_list[2].get_width() // 2, images_list[2].get_height() // 2
 images_earth = [
@@ -275,7 +279,7 @@ images_earth = [
 
 menu = Menu()
 cat = Cat(WIDTH_WIN // 2, HEIGHT_WIN // 2, images_cat)
-bat = Bat(WIDTH_WIN - size_bat, 0, images_bat)
+bat = Bat(WIDTH_WIN - height_bat, 0, images_bat)
 bat2 = Bat2()
 
 earth1 = Earth(0, HEIGHT_WIN - he, images_earth)
