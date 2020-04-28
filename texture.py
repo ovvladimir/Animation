@@ -39,9 +39,9 @@ def glue_images(path, line, aligment):
     with open('texture.txt', 'a') as fl:
         fl.write(f'{dict_texture}\n')
 
-    image.save(f'out/{path[3:]}.png')
+    # image.save(f'out/{path[3:]}.png')
     # image.show()
-    print(dict_texture)
+    # print(dict_texture)
 
 
 if __name__ == "__main__":
