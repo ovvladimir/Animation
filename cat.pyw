@@ -253,7 +253,7 @@ COLOR_CAT = ['red', 'green', 'royal blue', 'orange', 'olive drab', 'sienna4']
 images_list = []
 load_images('Images')
 
-image_cat = images_list[1].convert()  # для установки прозрачности
+images_list[1] = images_list[1].convert()  # для установки прозрачности
 images_cat = []
 images_bat = []
 with open('texture.txt') as f:
@@ -262,7 +262,7 @@ with open('texture.txt') as f:
         if 'cat' in line.keys():
             X, Y, W, h = [*line[str(*line.keys())].values()]
             for n, w in enumerate(W):
-                images_cat.append(image_cat.subsurface((X[n], Y[n], w, h)))
+                images_cat.append(images_list[1].subsurface((X[n], Y[n], w, h)))
         elif 'bat' in line.keys():
             X, Y, W, h = [*line[str(*line.keys())].values()]
             for n, w in enumerate(W):
