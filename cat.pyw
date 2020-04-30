@@ -110,8 +110,9 @@ class Bat2(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = images_list[3]
+        self.pos = (WIDTH_WIN * 1.4, WIDTH_WIN * 1.9, HEIGHT_WIN - he)
         self.rect = self.image.get_rect(
-            bottomleft=(random.randint(WIDTH_WIN, WIDTH_WIN * 2), HEIGHT_WIN - he))
+            bottomleft=(random.randint(self.pos[0], self.pos[1]), self.pos[2]))
         self.group = pygame.sprite.GroupSingle(self)
         self.vel = 0
         self.score = 0
@@ -128,10 +129,10 @@ class Bat2(pygame.sprite.Sprite):
         self.gravi()
         self.rect.centerx -= SPEED * 2
         if self.rect.right < 0:
-            self.rect.left = random.randint(WIDTH_WIN, WIDTH_WIN * 2)
+            self.rect.bottomleft = random.randint(self.pos[0], self.pos[1]), self.pos[2]
         if pygame.sprite.spritecollideany(
                 cat, self.group, pygame.sprite.collide_circle_ratio(0.75)):
-            self.rect.left = random.randint(WIDTH_WIN, WIDTH_WIN * 2)
+            self.rect.bottomleft = random.randint(self.pos[0], self.pos[1]), self.pos[2]
             self.score += 1
 
 
